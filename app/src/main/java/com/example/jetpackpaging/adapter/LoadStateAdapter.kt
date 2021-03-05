@@ -1,5 +1,6 @@
 package com.example.jetpackpaging.adapter
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.view.isVisible
@@ -10,6 +11,8 @@ import com.example.jetpackpaging.R
 import com.example.jetpackpaging.databinding.LoadStateLayoutBinding
 
 class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadFootViewHolder>() {
+
+
     override fun onBindViewHolder(holder: LoadFootViewHolder, loadState: LoadState) {
         holder.bind(loadState)
     }
@@ -23,6 +26,9 @@ class LoadStateAdapter(private val retry: () -> Unit) : LoadStateAdapter<LoadFoo
 
 class LoadFootViewHolder(private val binding: LoadStateLayoutBinding, retry: () -> Unit) :
     RecyclerView.ViewHolder(binding.root) {
+
+    private val TAG = NoMoreViewHolder::class.java.simpleName
+
     init {
         binding.btnRetry.setOnClickListener { retry.invoke() }
     }
@@ -35,6 +41,8 @@ class LoadFootViewHolder(private val binding: LoadStateLayoutBinding, retry: () 
         binding.tvError.isVisible = loadState !is LoadState.Loading
         binding.progressbar.isVisible = loadState is LoadState.Loading
         binding.btnRetry.isVisible = loadState !is LoadState.Loading
+        Log.e(TAG, "endPage==${loadState.endOfPaginationReached}")
+        binding.tvNomore.isVisible = loadState.endOfPaginationReached
     }
 
     companion object {

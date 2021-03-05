@@ -14,7 +14,10 @@ interface ArticleDao {
     suspend fun insertAll(list: List<ArticleEntity>)
 
 
-    @Query("select * from article")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertOrReplace(articleEntity: ArticleEntity)
+
+    @Query("select * from article order by insertIndex ASC ")
     fun queryArticle(): PagingSource<Int, ArticleEntity>
 
     @Query("delete from article")

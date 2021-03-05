@@ -8,18 +8,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.*
 import com.example.jetpackpaging.adapter.ArticleListAdapter
 import com.example.jetpackpaging.adapter.LoadStateAdapter
+import com.example.jetpackpaging.adapter.NoMoreViewAdapter
 import com.example.jetpackpaging.databinding.ArticleListFragmentBinding
 import com.example.jetpackpaging.viewmodel.ArticleListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.article_list_fragment.*
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -35,7 +35,10 @@ class ArticleListFragment : Fragment() {
 
     private val viewModel: ArticleListViewModel by viewModels()
 
-    private lateinit var adapter: ArticleListAdapter
+    private lateinit var concatAdapter : ConcatAdapter
+
+    private val noMoreViewAdapter = NoMoreViewAdapter()
+    private val contentAdapter = ArticleListAdapter { onItemClick(0) }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,25 +54,51 @@ class ArticleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.btnRetry.setOnClickListener { adapter.retry() }
+        binding.btnRetry.setOnClickListener { contentAdapter.retry() }
         initAdapter()
         fetchData()
     }
 
     private fun initAdapter() {
-        adapter = ArticleListAdapter { onItemClick() }
-        rv_articleList.adapter = adapter.withLoadStateFooter(
-            LoadStateAdapter { adapter.retry() })
 
-        adapter.addLoadStateListener { loadState ->
+        concatAdapter =
+            contentAdapter.withLoadStateHeaderAndFooter(
+                LoadStateAdapter { contentAdapter.retry() },
+                LoadStateAdapter { contentAdapter.retry() })
+        binding.rvArticleList.adapter = concatAdapter
+
+
+        // listen load state
+        contentAdapter.addLoadStateListener { loadState ->
+            //控制swipeRefreshLayout 显示与否
+            binding.refreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
             binding.rvArticleList.isVisible = loadState.refresh is LoadState.NotLoading
             binding.progressbar.isVisible = loadState.refresh is LoadState.Loading
             binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+
+            //到达底部，没有更多数据显示no more data
+            if (loadState.append.endOfPaginationReached) {
+                if (!concatAdapter.adapters.contains(noMoreViewAdapter)) {
+                    concatAdapter.addAdapter(noMoreViewAdapter)
+                }
+            } else {//隐藏no more data
+                if (concatAdapter.adapters.contains(noMoreViewAdapter)) {
+                    concatAdapter.removeAdapter(noMoreViewAdapter)
+                }
+            }
+
         }
 
 
 
-        rv_articleList.addItemDecoration(
+        binding.refreshLayout.setOnRefreshListener {
+
+            //adapter.refresh()  doesn't work
+            fetchData()
+        }
+
+
+        binding.rvArticleList.addItemDecoration(
             DividerItemDecoration(
                 requireActivity(),
                 DividerItemDecoration.VERTICAL
@@ -86,8 +115,7 @@ class ArticleListFragment : Fragment() {
         loadJob =
             lifecycleScope.launch {
                 viewModel.fetchArticle().collectLatest {
-
-                    adapter.submitData(it)
+                    contentAdapter.submitData(it)
                 }
             }
     }

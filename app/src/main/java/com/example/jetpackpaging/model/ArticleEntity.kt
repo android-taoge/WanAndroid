@@ -21,7 +21,7 @@ data class ArticleEntity(
     @Ignore var envelopePic: String = "",
     @Ignore var fresh: Boolean = false,
     @Ignore var host: String = "",
-    @PrimaryKey @field:SerializedName("id") var id: Int = 0,
+    @field:SerializedName("id") var id: Int = 0,
     @field:SerializedName("link") var link: String = "",
     @Ignore var niceDate: String = "",
     @Ignore var niceShareDate: String = "",
@@ -40,8 +40,11 @@ data class ArticleEntity(
     @field:SerializedName("type") var type: Int = 0,
     @field:SerializedName("userId") var userId: Int = 0,
     @Ignore var visible: Int = 0,
-    @Ignore var zan: Int = 0
-)
+    @Ignore var zan: Int = 0,
+    @PrimaryKey(autoGenerate = true)
+    @field:SerializedName("insertIndex") var insertIndex:Int=0
+
+    )
 
 
 data class Tag(

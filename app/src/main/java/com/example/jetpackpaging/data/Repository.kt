@@ -9,24 +9,23 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
-const val ARTICLE_PAGING_START = 1
+const val ARTICLE_PAGING_START = 0
 const val PAGING_SIZE = 20
 
 @ExperimentalPagingApi
 class Repository @Inject constructor(
-     private val apiService: ApiService,
-     private val dataBase: AppDataBase
-    //private val pagingSource: ArticlePagingSource
+    private val apiService: ApiService,
+    private val dataBase: AppDataBase
 ) {
 
 
     fun fetchArticle(): Flow<PagingData<ArticleEntity>> {
-         val sourceFactory = { dataBase.articleDao().queryArticle() }
+        val sourceFactory = { dataBase.articleDao().queryArticle() }
 
         return Pager(
-            config = PagingConfig(pageSize = PAGING_SIZE, enablePlaceholders = false),
+            config = PagingConfig(pageSize = PAGING_SIZE, enablePlaceholders = false,prefetchDistance = 2),
             remoteMediator = ArticleRemoteMediator(apiService, dataBase),
-            pagingSourceFactory = sourceFactory
+            pagingSourceFactory =  sourceFactory
         ).flow
     }
 

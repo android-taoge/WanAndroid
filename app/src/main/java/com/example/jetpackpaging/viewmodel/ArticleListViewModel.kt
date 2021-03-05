@@ -21,11 +21,6 @@ class ArticleListViewModel @Inject constructor(private val repository: Repositor
     private var currentArticleResult: Flow<PagingData<ArticleEntity>>? = null
 
     fun fetchArticle(): Flow<PagingData<ArticleEntity>> {
-        val lastArticleResult = currentArticleResult
-        if (lastArticleResult != null) {
-            return lastArticleResult
-        }
-
         val newFetchResult = repository.fetchArticle().cachedIn(viewModelScope)
         currentArticleResult = newFetchResult
         return newFetchResult

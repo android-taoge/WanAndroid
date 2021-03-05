@@ -9,5 +9,6 @@ import com.google.gson.annotations.SerializedName
 data class RemoteKeys(
     @PrimaryKey @field:SerializedName("articleId") val articleId: Int,
     @field:SerializedName("prevKey") val prevKey: Int?,
-    @field:SerializedName("nextKey") val nextKey: Int?
-)
+    @field:SerializedName("nextKey") val nextKey: Int?,
+
+    )
