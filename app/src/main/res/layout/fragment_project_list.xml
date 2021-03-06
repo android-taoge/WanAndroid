@@ -20,5 +20,7 @@
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <include layout="@layout/page_state_layout"/>
+    <include
+        android:id="@+id/page_state"
+        layout="@layout/page_state_layout" />
 </FrameLayout>
