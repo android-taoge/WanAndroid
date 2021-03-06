@@ -13,16 +13,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.*
-import com.example.jetpackpaging.adapter.ArticleListAdapter
-import com.example.jetpackpaging.adapter.LoadStateAdapter
-import com.example.jetpackpaging.adapter.NoMoreViewAdapter
+import com.example.jetpackpaging.adapter.*
 import com.example.jetpackpaging.databinding.ArticleListFragmentBinding
 import com.example.jetpackpaging.viewmodel.ArticleListViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @ExperimentalPagingApi
@@ -40,7 +35,8 @@ class ArticleListFragment : Fragment() {
     private lateinit var concatAdapter: ConcatAdapter
 
     private val noMoreViewAdapter = NoMoreViewAdapter()
-    private val contentAdapter = ArticleListAdapter { onItemClick(0) }
+    private val contentAdapter = ArticleListAdapter()
+    private val headerAdapter = HeaderAdapter(emptyList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,11 +58,11 @@ class ArticleListFragment : Fragment() {
     }
 
     private fun initAdapter() {
-
         concatAdapter =
             contentAdapter.withLoadStateHeaderAndFooter(
                 LoadStateAdapter { contentAdapter.retry() },
                 LoadStateAdapter { contentAdapter.retry() })
+        concatAdapter.addAdapter(0, headerAdapter)
         binding.rvArticleList.adapter = concatAdapter
 
 
@@ -96,7 +92,7 @@ class ArticleListFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener {
 
             //adapter.refresh()  doesn't work
-            viewModel.refreshData()
+            viewModel.fetchData()
         }
 
 
@@ -104,7 +100,7 @@ class ArticleListFragment : Fragment() {
             DividerItemDecoration(
                 requireActivity(),
                 DividerItemDecoration.VERTICAL
-            )
+            ), 0
         )
 
 
@@ -115,17 +111,23 @@ class ArticleListFragment : Fragment() {
     private fun fetchData() {
 
         fetchJob?.cancel()
-            viewModel.article.observe(viewLifecycleOwner, Observer {
-                lifecycleScope.launch {
-                    contentAdapter.submitData(it)
-                }
-            })
+        viewModel.article.observe(viewLifecycleOwner, Observer {
+            lifecycleScope.launch {
+                contentAdapter.submitData(it)
+            }
+        })
+
+        viewModel.banner.observe(viewLifecycleOwner, Observer {
+            lifecycleScope.launch {
+                headerAdapter.setBanner(it)
+            }
+        })
 
     }
 
 
-    private fun onItemClick(id: Int = 0) {
+    /*private fun onItemClick(id: Int = 0) {
         Toast.makeText(requireActivity(), "点击了", Toast.LENGTH_SHORT).show()
-    }
+    }*/
 
 }

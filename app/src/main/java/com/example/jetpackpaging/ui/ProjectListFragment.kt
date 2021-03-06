@@ -41,8 +41,8 @@ class ProjectListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btn_nav.setOnClickListener {
-            //findNavController().navigate(R.id.action_projectListFragment_to_nav_graph)
-            findNavController().navigate(R.id.action_projectListFragment_to_aboutActivity)
+            //findNavController().navigate(R.id.action_projectListFragment_to_aboutActivity)
+            //startActivity(Intent(requireActivity(), AboutActivity::class.java))
         }
     }
 

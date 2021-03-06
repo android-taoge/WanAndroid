@@ -21,4 +21,5 @@
         android:name="com.example.jetpackpaging.ui.AboutDetailFragment"
         android:label="fragment_about_detail"
         tools:layout="@layout/fragment_about_detail" />
+
 </navigation>

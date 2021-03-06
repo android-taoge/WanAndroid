@@ -6,7 +6,9 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.jetpackpaging.data.dao.ArticleDao
 import com.example.jetpackpaging.model.ArticleEntity
+import com.example.jetpackpaging.model.Banner
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 
@@ -16,6 +18,7 @@ const val PAGING_SIZE = 20
 @ExperimentalPagingApi
 class Repository @Inject constructor(
     private val articleDao: ArticleDao,
+    private val apiService: ApiService,
     private val articleRemoteMediator: ArticleRemoteMediator
 ) {
 
@@ -33,4 +36,11 @@ class Repository @Inject constructor(
         ).flow
     }
 
+
+    suspend fun fetchBanner(): Flow<List<Banner>> {
+        return flow {
+            val bannerJson = apiService.fetchBanner()
+            emit(bannerJson.data)
+        }
+    }
 }

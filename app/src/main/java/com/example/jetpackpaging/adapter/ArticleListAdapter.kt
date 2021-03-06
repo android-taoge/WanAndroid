@@ -8,9 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.jetpackpaging.R
 import com.example.jetpackpaging.databinding.ItemArticleLayoutBinding
 import com.example.jetpackpaging.model.ArticleEntity
+import com.example.jetpackpaging.model.SkipWeb
+import com.example.jetpackpaging.ui.WebViewActivity
 import java.text.SimpleDateFormat
 
-class ArticleListAdapter(private val itemClick: (articleId: Int) -> Unit) :
+class ArticleListAdapter() :
     PagingDataAdapter<ArticleEntity, ArticleListAdapter.ArticleViewHolder>(differ) {
 
 
@@ -35,13 +37,12 @@ class ArticleListAdapter(private val itemClick: (articleId: Int) -> Unit) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-        return ArticleViewHolder.create(parent, itemClick)
+        return ArticleViewHolder.create(parent)
     }
 
 
     class ArticleViewHolder(
-        private val binding: ItemArticleLayoutBinding,
-        private val click: (articleId: Int) -> Unit
+        private val binding: ItemArticleLayoutBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -56,18 +57,21 @@ class ArticleListAdapter(private val itemClick: (articleId: Int) -> Unit) :
                 }
 
                 binding.root.setOnClickListener {
-                    click.invoke(article.id)
+                    WebViewActivity.start2Web(
+                        binding.root.context,
+                        SkipWeb(article.id, article.link, article.title)
+                    )
                 }
             }
         }
 
 
         companion object {
-            fun create(parent: ViewGroup, click: (articleId: Int) -> Unit): ArticleViewHolder {
+            fun create(parent: ViewGroup): ArticleViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_article_layout, parent, false)
                 val binding = ItemArticleLayoutBinding.bind(view)
-                return ArticleViewHolder(binding, click)
+                return ArticleViewHolder(binding)
             }
         }
     }
