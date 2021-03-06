@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/project"
+    app:startDestination="@id/projectListFragment">
+
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="com.example.jetpackpaging.ui.ProjectListFragment"
+        android:label="fragment_project_list"
+        tools:layout="@layout/fragment_project_list">
+
+
+        <action
+            android:id="@+id/action_projectListFragment_to_nav_graph"
+            app:destination="@id/nav_graph" />
+        <action
+            android:id="@+id/action_projectListFragment_to_aboutActivity"
+            app:destination="@id/aboutActivity2" />
+    </fragment>
+    <include app:graph="@navigation/nav_graph" />
+    <activity
+        android:id="@+id/aboutActivity2"
+        android:name="com.example.jetpackpaging.ui.AboutActivity"
+        android:label="activity_about"
+        tools:layout="@layout/activity_about" />
+
+
+</navigation>

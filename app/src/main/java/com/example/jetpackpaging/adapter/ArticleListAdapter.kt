@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.jetpackpaging.R
 import com.example.jetpackpaging.databinding.ItemArticleLayoutBinding
 import com.example.jetpackpaging.model.ArticleEntity
+import java.text.SimpleDateFormat
 
-class ArticleListAdapter(private val itemClick: (articleId:Int) -> Unit) :
+class ArticleListAdapter(private val itemClick: (articleId: Int) -> Unit) :
     PagingDataAdapter<ArticleEntity, ArticleListAdapter.ArticleViewHolder>(differ) {
 
 
@@ -38,7 +39,10 @@ class ArticleListAdapter(private val itemClick: (articleId:Int) -> Unit) :
     }
 
 
-    class ArticleViewHolder(private val binding: ItemArticleLayoutBinding, private val click: (articleId:Int) -> Unit) :
+    class ArticleViewHolder(
+        private val binding: ItemArticleLayoutBinding,
+        private val click: (articleId: Int) -> Unit
+    ) :
         RecyclerView.ViewHolder(binding.root) {
 
 
@@ -46,9 +50,9 @@ class ArticleListAdapter(private val itemClick: (articleId:Int) -> Unit) :
             articleEntity?.let { article ->
                 binding.apply {
                     tvTitle.text = article.title
+                    tvDesc.text = article.desc
                     tvAuthor.text = article.author
-                    tvStar.text = article.desc
-
+                    tvTime.text = SimpleDateFormat("yyyy-MM-dd").format(article.publishTime)
                 }
 
                 binding.root.setOnClickListener {
@@ -59,7 +63,7 @@ class ArticleListAdapter(private val itemClick: (articleId:Int) -> Unit) :
 
 
         companion object {
-            fun create(parent: ViewGroup, click: (articleId:Int) -> Unit): ArticleViewHolder {
+            fun create(parent: ViewGroup, click: (articleId: Int) -> Unit): ArticleViewHolder {
                 val view = LayoutInflater.from(parent.context)
                     .inflate(R.layout.item_article_layout, parent, false)
                 val binding = ItemArticleLayoutBinding.bind(view)

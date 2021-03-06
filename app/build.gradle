@@ -72,4 +72,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$rootProject.hiltVersion"
     // When using Kotlin.
     kapt "com.google.dagger:hilt-android-compiler:$rootProject.hiltVersion"
+
+    //navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$rootProject.nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$rootProject.nav_version"
 }

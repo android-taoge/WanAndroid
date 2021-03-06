@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
@@ -18,6 +19,7 @@ import com.example.jetpackpaging.adapter.NoMoreViewAdapter
 import com.example.jetpackpaging.databinding.ArticleListFragmentBinding
 import com.example.jetpackpaging.viewmodel.ArticleListViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.scopes.FragmentScoped
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
@@ -35,7 +37,7 @@ class ArticleListFragment : Fragment() {
 
     private val viewModel: ArticleListViewModel by viewModels()
 
-    private lateinit var concatAdapter : ConcatAdapter
+    private lateinit var concatAdapter: ConcatAdapter
 
     private val noMoreViewAdapter = NoMoreViewAdapter()
     private val contentAdapter = ArticleListAdapter { onItemClick(0) }
@@ -94,7 +96,7 @@ class ArticleListFragment : Fragment() {
         binding.refreshLayout.setOnRefreshListener {
 
             //adapter.refresh()  doesn't work
-            fetchData()
+            viewModel.refreshData()
         }
 
 
@@ -109,19 +111,21 @@ class ArticleListFragment : Fragment() {
     }
 
 
-    private var loadJob: Job? = null
+    var fetchJob: Job? = null
     private fun fetchData() {
-        loadJob?.cancel()
-        loadJob =
-            lifecycleScope.launch {
-                viewModel.fetchArticle().collectLatest {
+
+        fetchJob?.cancel()
+            viewModel.article.observe(viewLifecycleOwner, Observer {
+                lifecycleScope.launch {
                     contentAdapter.submitData(it)
                 }
-            }
+            })
+
     }
 
 
     private fun onItemClick(id: Int = 0) {
         Toast.makeText(requireActivity(), "点击了", Toast.LENGTH_SHORT).show()
     }
+
 }

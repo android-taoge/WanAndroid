@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/article"
+    app:startDestination="@id/articleListFragment">
+
+    <fragment
+        android:id="@+id/articleListFragment"
+        android:name="com.example.jetpackpaging.ui.ArticleListFragment"
+        android:label="article_list_fragment"
+        tools:layout="@layout/article_list_fragment" >
+
+    </fragment>
+
+
+
+
+</navigation>

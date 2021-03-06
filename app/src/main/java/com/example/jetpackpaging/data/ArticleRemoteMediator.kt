@@ -10,9 +10,10 @@ import com.example.jetpackpaging.model.ArticleEntity
 import com.example.jetpackpaging.model.RemoteKeys
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
 @OptIn(ExperimentalPagingApi::class)
-class ArticleRemoteMediator constructor(
+class ArticleRemoteMediator @Inject constructor(
     private val apiService: ApiService,
     private val dataBase: AppDataBase
 ) : RemoteMediator<Int, ArticleEntity>() {
@@ -31,7 +32,7 @@ class ArticleRemoteMediator constructor(
             }
             LoadType.PREPEND -> {
                 val remoteKeys = getFirstItemRemoteKey(state)
-                remoteKeys?.prevKey ?: return MediatorResult.Success(endOfPaginationReached = false)
+                remoteKeys?.prevKey ?: return MediatorResult.Success(endOfPaginationReached = true)
                 remoteKeys.prevKey
             }
 
