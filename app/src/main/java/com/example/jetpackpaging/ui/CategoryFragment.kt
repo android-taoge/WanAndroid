@@ -13,6 +13,7 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.recyclerview.widget.*
 import com.example.jetpackpaging.R
 import com.example.jetpackpaging.`interface`.OnItemClickListener
+import com.example.jetpackpaging.adapter.ProjectCateAdapter
 import com.example.jetpackpaging.databinding.FragmentCategoryBinding
 import com.example.jetpackpaging.databinding.ItemProjectCateBinding
 import com.example.jetpackpaging.model.ProjectCate
@@ -33,7 +34,7 @@ class CategoryFragment : Fragment() {
 
 
     private lateinit var binding: FragmentCategoryBinding
-    private lateinit var categoryAdapter: ListAdapter<ProjectCate, CategoryViewHolder>
+    private lateinit var categoryAdapter: ProjectCateAdapter
     private val viewModel: ProjectViewModel by viewModels()
 
     companion object {
@@ -64,61 +65,14 @@ class CategoryFragment : Fragment() {
 
     private fun initCateAdapter() {
 
-        val diff = object : DiffUtil.ItemCallback<ProjectCate>() {
-            override fun areItemsTheSame(oldItem: ProjectCate, newItem: ProjectCate): Boolean =
-                oldItem === newItem
 
-            override fun areContentsTheSame(
-                oldItem: ProjectCate,
-                newItem: ProjectCate
-            ): Boolean = oldItem == newItem
-        }
-        categoryAdapter = object : ListAdapter<ProjectCate, CategoryViewHolder>(diff) {
-            override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder =
-                CategoryViewHolder.create(parent)
-
-            override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) =
-                holder.bind(getItem(position), onItemClickListener)
-        }
-
+        categoryAdapter = ProjectCateAdapter()
         binding.rvCate.adapter = categoryAdapter
         binding.rvCate.addItemDecoration(GridItemDecoration(2, 10))
-
-    }
-
-
-    class CategoryViewHolder(private val binding: ItemProjectCateBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-
-        init {
-
+        categoryAdapter.onItemClick = {
+            Toast.makeText(requireActivity(), "hello${it.id}", Toast.LENGTH_SHORT).show()
         }
 
-        fun bind(projectCate: ProjectCate, itemClickListener: OnItemClickListener<ProjectCate>) {
-            binding.tvTitle.text = projectCate.name
-            binding.root.setOnClickListener {
-                //TODO click
-                itemClickListener.onItemClick(projectCate)
-            }
-        }
-
-
-        companion object {
-            fun create(parent: ViewGroup): CategoryViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_project_cate, parent, false)
-                return CategoryViewHolder(ItemProjectCateBinding.bind(view))
-            }
-        }
-
-    }
-
-
-    val onItemClickListener = object : OnItemClickListener<ProjectCate> {
-        override fun onItemClick(data: ProjectCate) {
-            //Toast.makeText(requireActivity(), "hello${data.id}", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_categoryFragment_to_projectListFragment,Bundle(data.id))
-        }
     }
 
 
