@@ -52,7 +52,7 @@ class ArticleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding.btnRetry.setOnClickListener { contentAdapter.retry() }
+        binding.pageState.btnRetry.setOnClickListener { contentAdapter.retry() }
         initAdapter()
         fetchData()
     }
@@ -71,8 +71,8 @@ class ArticleListFragment : Fragment() {
             //控制swipeRefreshLayout 显示与否
             binding.refreshLayout.isRefreshing = loadState.refresh is LoadState.Loading
             binding.rvArticleList.isVisible = loadState.refresh is LoadState.NotLoading
-            binding.progressbar.isVisible = loadState.refresh is LoadState.Loading
-            binding.btnRetry.isVisible = loadState.refresh is LoadState.Error
+            binding.pageState.progressbar.isVisible = loadState.refresh is LoadState.Loading
+            binding.pageState.btnRetry.isVisible = loadState.refresh is LoadState.Error
 
             //到达底部，没有更多数据显示no more data
             if (loadState.append.endOfPaginationReached) {

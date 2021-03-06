@@ -29,20 +29,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initNavigation() {
-       /* val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
-        val navController = navHostFragment.findNavController()
-        mainBinding.bottomNavigation.setupWithNavController(navController)*/
+        /* val navHostFragment =
+             supportFragmentManager.findFragmentById(R.id.nav_host) as NavHostFragment
+         val navController = navHostFragment.findNavController()
+         mainBinding.bottomNavigation.setupWithNavController(navController)*/
 
 
         val navGraphIds = listOf(
             R.navigation.nav_article,
-            R.navigation.nav_project,
             R.navigation.nav_category,
+            R.navigation.nav_project,
             R.navigation.nav_mine
         )
 
-         mainBinding.bottomNavigation.setupWithNavController(
+        mainBinding.bottomNavigation.setupWithNavController(
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host,

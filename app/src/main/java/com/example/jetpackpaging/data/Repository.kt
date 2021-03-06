@@ -7,6 +7,8 @@ import androidx.paging.PagingData
 import com.example.jetpackpaging.data.dao.ArticleDao
 import com.example.jetpackpaging.model.ArticleEntity
 import com.example.jetpackpaging.model.Banner
+import com.example.jetpackpaging.model.ProjectCate
+import com.example.jetpackpaging.model.ProjectEntity
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -42,5 +44,10 @@ class Repository @Inject constructor(
             val bannerJson = apiService.fetchBanner()
             emit(bannerJson.data)
         }
+    }
+
+
+    suspend fun fetchProjectCate(): Flow<List<ProjectCate>> = flow {
+        emit(apiService.fetchProjectCate().data)
     }
 }

@@ -1,4 +1,4 @@
-package com.example.jetpackpaging.data
+package com.example.jetpackpaging.model
 
 sealed class Response<out T> {
 

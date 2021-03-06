@@ -1,6 +1,5 @@
-package com.example.jetpackpaging.data
+package com.example.jetpackpaging.model
 
-import com.example.jetpackpaging.model.ArticleEntity
 
 data class ArticlePage(
     val curPage: Int = 0,

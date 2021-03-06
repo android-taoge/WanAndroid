@@ -10,11 +10,27 @@
         android:id="@+id/categoryFragment"
         android:name="com.example.jetpackpaging.ui.CategoryFragment"
         android:label="fragment_category"
-        tools:layout="@layout/fragment_category" >
+        tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_categoryFragment_to_nav_graph"
             app:destination="@id/nav_graph" />
+        <action
+            android:id="@+id/action_categoryFragment_to_projectListFragment"
+            app:destination="@id/projectListFragment">
+
+        </action>
+
     </fragment>
 
     <include app:graph="@navigation/nav_graph" />
+    <fragment
+        android:id="@+id/projectListFragment"
+        android:name="com.example.jetpackpaging.ui.ProjectListFragment"
+        android:label="fragment_project_list"
+        tools:layout="@layout/fragment_project_list" >
+        <argument
+            android:name="@string/project_cate_id"
+            app:argType="integer"
+            android:defaultValue="0" />
+    </fragment>
 </navigation>

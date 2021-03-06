@@ -1,14 +1,11 @@
 package com.example.jetpackpaging.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.example.jetpackpaging.R
-import kotlinx.android.synthetic.main.fragment_project_list.*
+import com.example.jetpackpaging.databinding.FragmentProjectListBinding
 
 
 /**
@@ -18,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_project_list.*
  */
 class ProjectListFragment : Fragment() {
 
+    private lateinit var binding: FragmentProjectListBinding
 
     companion object {
         @JvmStatic
@@ -34,16 +32,13 @@ class ProjectListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_project_list, container, false)
+        binding = FragmentProjectListBinding.inflate(LayoutInflater.from(requireActivity()))
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        btn_nav.setOnClickListener {
-            //findNavController().navigate(R.id.action_projectListFragment_to_aboutActivity)
-            //startActivity(Intent(requireActivity(), AboutActivity::class.java))
-        }
+
     }
 
 
