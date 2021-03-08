@@ -7,7 +7,6 @@ import androidx.paging.ExperimentalPagingApi
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.jetpackpaging.data.ProjectRepository
-import com.example.jetpackpaging.data.Repository
 import com.example.jetpackpaging.model.ProjectCate
 import com.example.jetpackpaging.model.ProjectEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,8 +22,14 @@ class ProjectViewModel @Inject constructor(private val repository: ProjectReposi
 
     private var _projectCate = MutableLiveData<List<ProjectCate>>()
 
-    val projectCate get() = _projectCate
+    val projectCate
+        get() = _projectCate
 
+
+    private var _projectList = MutableLiveData<PagingData<ProjectEntity>>()
+
+    val projectList
+        get() = _projectList
 
     init {
 
@@ -41,9 +46,14 @@ class ProjectViewModel @Inject constructor(private val repository: ProjectReposi
 
     }
 
-    fun fetchProjectList(categoryId: Int): Flow<PagingData<ProjectEntity>> {
-        return repository.fetchProjectList(categoryId).cachedIn(viewModelScope)
+     fun fetchProjectList(cateId: Int) {
+        viewModelScope.launch {
+            repository.fetchProjectList(cateId).cachedIn(viewModelScope).collectLatest {
+                _projectList.value = it
+            }
+        }
     }
 
 
 }
+

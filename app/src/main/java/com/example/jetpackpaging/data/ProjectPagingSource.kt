@@ -3,19 +3,22 @@ package com.example.jetpackpaging.data
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.jetpackpaging.model.ProjectEntity
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import okio.IOException
 import retrofit2.HttpException
-import javax.inject.Inject
 
 const val PROJECT_LIST_START_PAGE = 1
 const val PROJECT_PAGING_SIZE = 15
 
 
-class ProjectPagingSource @Inject constructor(
+class ProjectPagingSource @AssistedInject constructor(
     private val apiService: ApiService,
-    private val categoryId: Int
+    @Assisted private val categoryId: Int
 ) :
     PagingSource<Int, ProjectEntity>() {
+
     override fun getRefreshKey(state: PagingState<Int, ProjectEntity>): Int? {
         return PROJECT_LIST_START_PAGE
     }
@@ -39,6 +42,15 @@ class ProjectPagingSource @Inject constructor(
             LoadResult.Error(e)
         }
     }
+
+
+
 }
+
+@AssistedFactory
+interface ProjectSourceFactory {
+    fun create(categoryId: Int): ProjectPagingSource
+}
+
 
 

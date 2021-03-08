@@ -10,11 +10,14 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.*
+import com.example.jetpackpaging.R
 import com.example.jetpackpaging.adapter.*
 import com.example.jetpackpaging.databinding.ArticleListFragmentBinding
+import com.example.jetpackpaging.model.SkipWeb
 import com.example.jetpackpaging.viewmodel.ArticleListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -87,6 +90,11 @@ class ArticleListFragment : Fragment() {
 
         }
 
+
+        contentAdapter.onItemClick = { article ->
+            val skipWeb = SkipWeb(article.id, article.link, article.title)
+            WebViewActivity.start2Web(requireActivity(),skipWeb)
+        }
 
 
         binding.refreshLayout.setOnRefreshListener {

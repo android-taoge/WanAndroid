@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JetpackPaging"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.WebViewActivity"></activity>
+        <activity android:name=".ui.ProjectListActivity"></activity>
+        <activity android:name=".ui.WebViewActivity" />
         <activity android:name=".ui.AboutActivity" />
         <activity android:name=".ui.MainActivity">
             <intent-filter>

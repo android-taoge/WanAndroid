@@ -7,19 +7,20 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadState
-import com.example.jetpackpaging.R
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.jetpackpaging.adapter.LoadStateAdapter
 import com.example.jetpackpaging.adapter.ProjectListAdapter
 import com.example.jetpackpaging.databinding.FragmentProjectListBinding
+import com.example.jetpackpaging.model.ProjectCate
+import com.example.jetpackpaging.model.SkipWeb
+import com.example.jetpackpaging.ui.ProjectListActivity.Companion.PROJECT_CATE
 import com.example.jetpackpaging.viewmodel.ProjectViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.article_list_fragment.*
-import kotlinx.android.synthetic.main.load_state_layout.view.*
-import kotlinx.android.synthetic.main.page_state_layout.*
-import kotlinx.coroutines.flow.collectLatest
 
 
 /**
@@ -30,21 +31,28 @@ import kotlinx.coroutines.flow.collectLatest
 @ExperimentalPagingApi
 @AndroidEntryPoint
 class ProjectListFragment : Fragment() {
-
-    private val viewModel: ProjectViewModel by viewModels()
     private lateinit var binding: FragmentProjectListBinding
+    private val viewModel: ProjectViewModel by viewModels()
+
+    //private val args: ProjectListFragmentArgs by navArgs()
+    private var projectCate: ProjectCate? = null
     private val adapter = ProjectListAdapter()
-    private var categoryId: Int = 314
+
 
     companion object {
+
         @JvmStatic
-        fun newInstance() =
-            ProjectListFragment()
+        fun newInstance(projectCate: ProjectCate) =
+            ProjectListFragment().apply {
+                arguments = Bundle().apply {
+                    putSerializable(PROJECT_CATE, projectCate)
+                }
+            }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //categoryId = arguments?.get(resources.getString(R.string.project_cate_id)) as Int
+        projectCate = arguments?.getSerializable(PROJECT_CATE) as ProjectCate
     }
 
     override fun onCreateView(
@@ -64,11 +72,14 @@ class ProjectListFragment : Fragment() {
 
     private fun fetchProjectList() {
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.fetchProjectList(categoryId).collectLatest {
+
+        projectCate?.id?.let { viewModel.fetchProjectList(it) }
+        viewModel.projectList.observe(viewLifecycleOwner, Observer {
+            lifecycleScope.launchWhenCreated {
                 adapter.submitData(it)
             }
-        }
+        })
+
     }
 
     private fun initAdapter() {
@@ -85,9 +96,27 @@ class ProjectListFragment : Fragment() {
 
             }
         }
+        binding.rvProjectList.addItemDecoration(
+            DividerItemDecoration(
+                requireActivity(),
+                DividerItemDecoration.VERTICAL
+            )
+        )
 
         binding.refresh.setOnRefreshListener {
             fetchProjectList()
+        }
+
+
+        adapter.onItemClick = { position, projectEntity ->
+            projectEntity?.id?.let {
+                SkipWeb(
+                    id = projectEntity.id,
+                    title = projectEntity.title,
+                    link = projectEntity.link
+                )
+            }?.let { WebViewActivity.start2Web(requireActivity(), it) }
+
         }
     }
 

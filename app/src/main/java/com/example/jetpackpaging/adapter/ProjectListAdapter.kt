@@ -1,13 +1,16 @@
 package com.example.jetpackpaging.adapter
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.jetpackpaging.R
 import com.example.jetpackpaging.databinding.ItemProjectListBinding
 import com.example.jetpackpaging.model.ProjectEntity
+import java.text.SimpleDateFormat
 
 class ProjectListAdapter :
     PagingDataAdapter<ProjectEntity, ProjectListAdapter.ProjectViewHolder>(diff) {
@@ -39,8 +42,20 @@ class ProjectListAdapter :
             }
         }
 
+        @SuppressLint("SimpleDateFormat")
         fun bind(projectEntity: ProjectEntity?) {
-            binding.tvTitle.text = projectEntity?.title
+            binding.apply {
+                projectEntity?.let {
+                    tvTitle.text=it.title
+                    tvDesc.text=it.desc
+                    tvAuthor.text=it.author
+                    tvPublishtime.text=SimpleDateFormat("yyyy-MM-dd").format(it.publishTime)
+
+                    Glide.with(binding.root.context)
+                        .load(it.envelopePic)
+                        .into(imageView)
+                }
+            }
         }
     }
 

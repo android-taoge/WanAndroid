@@ -10,20 +10,25 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class ProjectRepository @Inject constructor(
-    private val apiService: ApiService,
-    //private val projectPagingSource: ProjectPagingSource
+    private val apiService: ApiService
 ) {
+
+    @Inject
+    lateinit var projectSourceFactory: ProjectSourceFactory
+
 
     suspend fun fetchProjectCate(): Flow<List<ProjectCate>> = flow {
         emit(apiService.fetchProjectCate().data)
     }
 
-    fun fetchProjectList(cid: Int): Flow<PagingData<ProjectEntity>> =
+    fun fetchProjectList(cateId: Int): Flow<PagingData<ProjectEntity>> =
+
+
         Pager(
             config = PagingConfig(
                 pageSize = PROJECT_PAGING_SIZE,
                 enablePlaceholders = false
             ),
-            pagingSourceFactory = { ProjectPagingSource(RetrofitClient.createService(), cid) }
+            pagingSourceFactory = { projectSourceFactory.create(cateId) }
         ).flow
 }

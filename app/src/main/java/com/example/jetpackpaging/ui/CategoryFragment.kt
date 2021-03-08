@@ -71,7 +71,8 @@ class CategoryFragment : Fragment() {
         binding.rvCate.addItemDecoration(GridItemDecoration(2, 10))
         categoryAdapter.onItemClick = {
             //Toast.makeText(requireActivity(), "hello${it.id}", Toast.LENGTH_SHORT).show()
-            findNavController().navigate(R.id.action_categoryFragment_to_projectListFragment)
+            //findNavController().navigate(R.id.action_categoryFragment_to_projectListFragment)
+            ProjectListActivity.start2ProjectList(requireActivity(),it)
         }
 
     }

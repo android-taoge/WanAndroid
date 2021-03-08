@@ -10,7 +10,7 @@
         android:id="@+id/aboutFragment"
         android:name="com.example.jetpackpaging.ui.AboutFragment"
         android:label="fragment_about"
-        tools:layout="@layout/fragment_about" >
+        tools:layout="@layout/fragment_about">
         <action
             android:id="@+id/action_aboutFragment_to_aboutDetailFragment"
             app:destination="@id/aboutDetailFragment" />
@@ -21,5 +21,48 @@
         android:name="com.example.jetpackpaging.ui.AboutDetailFragment"
         android:label="fragment_about_detail"
         tools:layout="@layout/fragment_about_detail" />
+    <fragment
+        android:id="@+id/articleListFragment"
+        android:name="com.example.jetpackpaging.ui.ArticleListFragment"
+        android:label="article_list_fragment"
+        tools:layout="@layout/article_list_fragment">
+        <action
+            android:id="@+id/action_articleListFragment_to_webViewActivity"
+            app:destination="@id/webViewActivity" />
+    </fragment>
+    <fragment
+        android:id="@+id/categoryFragment"
+        android:name="com.example.jetpackpaging.ui.CategoryFragment"
+        android:label="fragment_category"
+        tools:layout="@layout/fragment_category">
+        <action
+            android:id="@+id/action_categoryFragment_to_projectListActivity"
+            app:destination="@id/projectListActivity" />
+    </fragment>
+    <activity
+        android:id="@+id/projectListActivity"
+        android:name="com.example.jetpackpaging.ui.ProjectListActivity"
+        android:label="activity_project_list"
+        tools:layout="@layout/activity_project_list" />
+    <fragment
+        android:id="@+id/mineFragment"
+        android:name="com.example.jetpackpaging.ui.MineFragment"
+        android:label="fragment_mine"
+        tools:layout="@layout/fragment_mine" />
+    <activity
+        android:id="@+id/webViewActivity"
+        android:name="com.example.jetpackpaging.ui.WebViewActivity"
+        android:label="activity_web_view"
+        tools:layout="@layout/activity_web_view">
+        <argument
+            android:name="skip_web"
+            app:argType="com.example.jetpackpaging.model.SkipWeb" />
+
+    </activity>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.jetpackpaging.ui.MainActivity"
+        android:label="activity_main"
+        tools:layout="@layout/activity_main" />
 
 </navigation>

@@ -15,6 +15,7 @@ import java.text.SimpleDateFormat
 class ArticleListAdapter() :
     PagingDataAdapter<ArticleEntity, ArticleListAdapter.ArticleViewHolder>(differ) {
 
+    var onItemClick: ((ArticleEntity) -> Unit)? = null
 
     companion object {
         val differ = object : DiffUtil.ItemCallback<ArticleEntity>() {
@@ -37,15 +38,25 @@ class ArticleListAdapter() :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArticleViewHolder {
-        return ArticleViewHolder.create(parent)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_article_layout, parent, false)
+        val binding = ItemArticleLayoutBinding.bind(view)
+        return ArticleViewHolder(binding)
     }
 
 
-    class ArticleViewHolder(
+    inner class ArticleViewHolder(
         private val binding: ItemArticleLayoutBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
+
+        init {
+            binding.root.setOnClickListener {
+                val article = getItem(absoluteAdapterPosition) as ArticleEntity
+                onItemClick?.invoke(article)
+            }
+        }
 
         fun bind(articleEntity: ArticleEntity?) {
             articleEntity?.let { article ->
@@ -56,24 +67,10 @@ class ArticleListAdapter() :
                     tvTime.text = SimpleDateFormat("yyyy-MM-dd").format(article.publishTime)
                 }
 
-                binding.root.setOnClickListener {
-                    WebViewActivity.start2Web(
-                        binding.root.context,
-                        SkipWeb(article.id, article.link, article.title)
-                    )
-                }
             }
         }
 
 
-        companion object {
-            fun create(parent: ViewGroup): ArticleViewHolder {
-                val view = LayoutInflater.from(parent.context)
-                    .inflate(R.layout.item_article_layout, parent, false)
-                val binding = ItemArticleLayoutBinding.bind(view)
-                return ArticleViewHolder(binding)
-            }
-        }
     }
 
 

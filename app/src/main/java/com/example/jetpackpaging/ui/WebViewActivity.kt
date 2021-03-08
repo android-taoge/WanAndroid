@@ -13,6 +13,7 @@ import android.webkit.WebViewClient
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isGone
+import androidx.navigation.navArgs
 import com.example.jetpackpaging.R
 import com.example.jetpackpaging.databinding.ActivityWebViewBinding
 import com.example.jetpackpaging.model.SkipWeb
@@ -20,6 +21,7 @@ import com.example.jetpackpaging.model.SkipWeb
 class WebViewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityWebViewBinding
+
 
     private var skipWeb: SkipWeb? = null
 
@@ -40,7 +42,7 @@ class WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityWebViewBinding.inflate(layoutInflater)
-        skipWeb = intent.extras?.get(SKIP) as SkipWeb?
+        skipWeb = intent.extras?.get(SKIP) as SkipWeb
         setContentView(binding.root)
         initWebView()
         initTitle()
